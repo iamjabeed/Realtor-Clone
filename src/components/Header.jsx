@@ -2,7 +2,7 @@ import { useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
 const Header = () => {
   const location = useLocation();
-  console.log(location.pathname);
+  // console.log(location.pathname);
   function pathMatchRoute(route) {
     if (route === location.pathname) return true;
   }
