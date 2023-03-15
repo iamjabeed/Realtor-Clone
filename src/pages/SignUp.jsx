@@ -3,20 +3,39 @@ import { useState } from "react";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import OAuth from "../components/OAuth";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { db } from "../firebase";
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    name:"",
+    name: "",
     email: "",
     password: "",
   });
-  const {name, email, password } = formData;
+  const { name, email, password } = formData;
 
   function onChange(e) {
     setFormData((prevState) => ({
       ...prevState,
       [e.target.id]: e.target.value,
     }));
+  }
+
+  async function onSubmit(e) {
+    e.preventDefault();
+
+    try {
+      const auth = getAuth();
+      const userCredentials = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredentials.user;
+      console.log(user);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
@@ -27,13 +46,13 @@ const SignUp = () => {
       <div className=" mx-5 my-4 flex justify-between items-center flex-wrap">
         <div className="md:w-[50%] lg:w-[50%] mb-12 md:mb-6">
           <img
-            src="https://images.unsplash.com/photo-1520453803296-c39eabe2dab4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8c2lnbiUyMGlufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=600&q=60"
+            src="https://images.unsplash.com/photo-1497864149936-d3163f0c0f4b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8bG9naW58ZW58MHx8MHx8&auto=format&fit=crop&w=600&q=60"
             alt="image"
             className="w-full rounded-lg"
           />
         </div>
         <div className="w-full md:w-[40%] lg:w-[40%] lg:ml-10 rounded-sm ">
-          <form>
+          <form onSubmit={onSubmit}>
             <input
               type="text"
               id="name"
@@ -73,13 +92,13 @@ const SignUp = () => {
             </div>
             <div className="flex justify-between items-center text-sm whitespace-nowrap my-4">
               <p>
-              Have an account?{" "}
+                Have an account?{" "}
                 <Link to={"/sign-in"} className="text-red-600">
                   sign in
                 </Link>
               </p>
               <p className="text-[#1D4ED8]">
-                <Link to={"/forgot-pass"} >Forgot password?</Link>
+                <Link to={"/forgot-pass"}>Forgot password?</Link>
               </p>
             </div>
             <button
